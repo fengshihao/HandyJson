@@ -1,5 +1,7 @@
 package com.fengshihao.example.handyjson;
 
+import java.util.ArrayList;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,17 +17,17 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-//    TestModel tm = new TestModel();
-//    tm.age = 10;
-//    tm.name = "hello handy json";
-//    tm.mMems = new int[3];
-//    tm.checked = true;
-//    String json = HandyTestModel.toJson(tm);
-//    Log.d("MainActivity", "onCreate: json=" + json);
+    TestModel tm = new TestModel();
+    tm.age = 10;
+    tm.name = "hello handy json";
+    tm.mMems = new int[3];
+    tm.checked = true;
+    String json = HandyTestModel.toJson(tm);
+    Log.d("MainActivity", "onCreate: json=" + json);
   }
 }
 
-
+@HandyJson
 class TestModel {
   @JsonKey("jsonAge")
   int age;
@@ -37,4 +39,6 @@ class TestModel {
 
   @Exclude
   private int privateIgnore;
+
+  ArrayList<String> names;
 }

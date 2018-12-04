@@ -20,6 +20,8 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 
@@ -102,22 +104,28 @@ public class HandyJsonProcessor extends AbstractProcessor {
           jsonKey = jk.value();
         }
 
-        log("name=%s, %s %s", name, m.getKind(), kel.getSimpleName());
+        TypeMirror typeMirror = kel.asType();
+
+
+
+        log("name=%s, %s %s %s %s", name, m.getKind(), kel.getSimpleName()
+            , typeMirror.getKind(), typeMirror);
 
         ClassField cf = new ClassField();
         cf.name = name;
         cf.key = jsonKey != null ? jsonKey : name;
-        code.fields.add(cf);
+        cf.typeName = typeMirror.toString();
 
-//                List<String> plist = new LinkedList<>();
-//                ExecutableElement em = (ExecutableElement) m;
-//                List<? extends VariableElement> parameters = em.getParameters();
-//                for (VariableElement p: parameters) {
-//                    //log("p=" + p.getSimpleName() + " " + p.asType());
-//                    plist.add(p.asType().toString());
-//                    plist.add(p.getSimpleName().toString());
-//                }
-        //model.methods.put(methodName, plist);
+        if (typeMirror.getKind() == TypeKind.DECLARED) {
+          if (typeMirror.toString().equals("java.lang.String")) {
+            cf.isString = true;
+          } else {
+            cf.isClass = true;
+          }
+        } else if (typeMirror.getKind() == TypeKind.ARRAY){
+          cf.isArray = true;
+        }
+        code.fields.add(cf);
       }
       try {
         code.write(mFiler);

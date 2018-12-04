@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeKind;
 
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -31,17 +32,18 @@ class CodeGenerator {
   String toJsonCode(String ob) {
     int last = fields.size();
     int i = 0;
-    StringBuilder code = new StringBuilder("return ").append('"') .append("{");
-    for (ClassField f : fields) {
-      code.append("\\\"").append(f.key).append("\\\":\" + ")
-          .append(ob).append(".").append(f.name);
 
+    StringBuilder code = new StringBuilder("String jstr = \"{\";\n");
+    for (ClassField f : fields) {
+      f.toCode(code, ob);
       i += 1;
       if (i != last) {
-        code.append("+ \",\" + \"");
+        code.append("jstr += \",\" ;");
       }
+      code.append("\n");
     }
-    code.append(" + \"}\"").append('\n');
+    code.append("jstr += \"}\";");
+    code.append("return jstr");
     return  code.toString();
   }
 
@@ -84,4 +86,42 @@ class CodeGenerator {
 class ClassField {
   String name;
   String key;
+  String typeName;
+  boolean isArray;
+  boolean isClass;
+  boolean isString;
+
+  private String getKeyCode() {
+    return "\\\"" + key + "\\\":";
+  }
+
+  void beginCheckNull(StringBuilder code, String objectName) {
+    if (isArray || isString || isClass) {
+      code.append("if (").append(objectName)
+          .append(".").append(name).append(" != null) { ");
+    }
+  }
+
+  void toCode(StringBuilder code, String objectName) {
+    beginCheckNull(code, objectName);
+
+    code.append("jstr +=  \"").append(getKeyCode()).append("\" + ");
+
+    if (isString) {
+      code.append("com.fengshihao.handyjson.Utils.quote(");
+    }
+    code.append(objectName).append(".").append(name);
+    if (isString) {
+      code.append(")");
+    }
+    code.append(';');
+    endCheckNull(code);
+    code.append('\n');
+  }
+
+  void endCheckNull(StringBuilder code) {
+    if (isArray || isString || isClass) {
+      code.append("}");
+    }
+  }
 }
