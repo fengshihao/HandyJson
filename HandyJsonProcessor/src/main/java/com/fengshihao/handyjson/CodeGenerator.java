@@ -26,7 +26,7 @@ class CodeGenerator {
   CodeGenerator(String packageName, String className) {
     this.packageName = packageName;
     this.originalName = className;
-    this.className = "Handy" + className;
+    this.className = className + "Handy";
   }
 
   String toJsonCode(String ob) {
@@ -55,7 +55,7 @@ class CodeGenerator {
     getJavaFile().writeTo(filer);
   }
 
-  JavaFile getJavaFile() {
+  private JavaFile getJavaFile() {
     String argName = "o";
     ParameterSpec parameterSpec = ParameterSpec.builder(
         TypeVariableName.get(originalName), argName).build();
@@ -108,14 +108,23 @@ class ClassField {
     code.append("\tjstr +=  \"").append(getKeyCode()).append("\" + ");
 
     boolean isObj = isString || isArray;
+    boolean needEnd = false;
     if (isObj) {
       code.append("com.fengshihao.example.handyjson.Utils.toJson(");
+      needEnd = true;
     }
     if (isClass) {
-
+      if (typeName.startsWith("java.")) {
+        code.append("com.fengshihao.example.handyjson.Utils.toJson(")
+            .append("\"").append(typeName).append("\"").append(", ");
+        needEnd = true;
+      } else {
+        code.append(typeName).append("Handy.toJson(");
+        needEnd = true;
+      }
     }
     code.append(objectName).append(".").append(name);
-    if (isObj) {
+    if (needEnd) {
       //code.append(", \"").append(typeName).append("\")");
       code.append(")");
     }

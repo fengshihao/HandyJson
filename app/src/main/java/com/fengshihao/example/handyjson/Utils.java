@@ -5,48 +5,38 @@ import java.util.List;
 
 public class Utils {
 
-//  public static String toJson(Object o) {
-//    if (o == null) {
-//      return null;
-//    }
-//    if (o instanceof String) {
-//      toJson((String) o);
-//    } if (o instanceof List) {
-//      return toJson((List) o);
-//    } else if (o instanceof Object[]){
-//      return ArrayUtils.toString((int[])o);
-//    } else {
-//      return "todo";
-//    }
-//  }
-
-//
-//
-//  private static<T> String toJson(List<T> list) {
-//    if (list == null) {
-//      return null;
-//    }
-//    if (list.isEmpty()) {
-//      return "[]";
-//    }
-//
-//    StringBuilder str = new StringBuilder("[");
-//    for (T o: list) {
-//      str.append(toJson(o));
-//    }
-//    str.append("]");
-//    return str.toString();
-//  }
-
-  public static String toJson(Object obj, String type) {
-    if ("java.lang.String".equals(type)) {
-      return toJson((String) obj);
-    } else if (type.endsWith("[]")) {
-      return arrayToJson(obj, type);
+  public static String toJson(String type, List list) {
+    if (list == null) {
+      return null;
+    }
+    if (list.isEmpty()) {
+      return "[]";
     }
 
-    return null;
+    StringBuilder str = new StringBuilder("[");
+    int size = list.size();
+    if (type.endsWith("<java.lang.String>")) {
+      for (int i = 0; i < size; i++) {
+        String o = (String) list.get(i);
+        str.append(toJson(o));
+        if (i < size - 1) {
+          str.append(',');
+        }
+      }
+    } else if (type.endsWith("<java.lang.Integer>")) {
+      for (int i = 0; i < size; i++) {
+        Integer o = (Integer) list.get(i);
+        str.append(o.toString());
+        if (i < size - 1) {
+          str.append(',');
+        }
+      }
+    }
+
+    str.append("]");
+    return str.toString();
   }
+
 
   public static String toJson(String string) {
     if (string == null || string.length() == 0) {

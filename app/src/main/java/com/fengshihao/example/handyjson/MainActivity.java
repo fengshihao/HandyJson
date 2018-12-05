@@ -1,10 +1,10 @@
 package com.fengshihao.example.handyjson;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.fengshihao.handyjson.Exclude;
@@ -23,7 +23,18 @@ public class MainActivity extends AppCompatActivity {
     tm.name = "hello {handy} json";
     tm.mMems = new int[3];
     tm.checked = true;
-    String json = HandyTestModel.toJson(tm);
+    tm.integers = new Integer[] {2,45,-10};
+    tm.names = new LinkedList<>();
+    tm.names.add("name 1");
+    tm.names.add("name \r2");
+    tm.names.add("name \n3");
+
+    tm.subObject = new SubObject();
+    tm.subObject.name = "subobject";
+    tm.integers = new Integer[] {211,4225,-103};
+
+
+    String json = TestModelHandy.toJson(tm);
     Log.d("MainActivity", "onCreate: json=" + json);
   }
 }
@@ -48,6 +59,17 @@ class TestModel {
   Integer[] integers;
 
 
-  ArrayList<String> names;
+  List<String> names;
   LinkedList<Integer> nums;
+
+  SubObject subObject;
+}
+
+@HandyJson
+class SubObject {
+  @JsonKey("jsonAge")
+  int age;
+  String name;
+  boolean bool;
+  Integer[] integers;
 }
