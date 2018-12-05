@@ -35,15 +35,16 @@ class CodeGenerator {
 
     StringBuilder code = new StringBuilder("String jstr = \"{\";\n");
     for (ClassField f : fields) {
-      f.toCode(code, ob);
       i += 1;
-      if (i != last) {
-        code.append("jstr += \",\" ;");
-      }
+      f.toCode(code, ob, i != last);
       code.append("\n");
     }
-    code.append("jstr += \"}\";");
-    code.append("return jstr");
+    code.append(
+    "if (jstr.charAt(jstr.length() - 1) == ',') { \n" +
+    "    jstr = jstr.substring(0, jstr.length() - 1); \n" +
+    "}");
+    code.append("\njstr += \"}\";");
+    code.append("\nreturn jstr");
     return  code.toString();
   }
 
@@ -95,33 +96,41 @@ class ClassField {
     return "\\\"" + key + "\\\":";
   }
 
-  void beginCheckNull(StringBuilder code, String objectName) {
+  private void beginCheckNull(StringBuilder code, String objectName) {
     if (isArray || isString || isClass) {
       code.append("if (").append(objectName)
-          .append(".").append(name).append(" != null) { ");
+          .append(".").append(name).append(" != null) {\n");
     }
   }
 
-  void toCode(StringBuilder code, String objectName) {
+  void toCode(StringBuilder code, String objectName, boolean notLastOne) {
     beginCheckNull(code, objectName);
+    code.append("\tjstr +=  \"").append(getKeyCode()).append("\" + ");
 
-    code.append("jstr +=  \"").append(getKeyCode()).append("\" + ");
+    boolean isObj = isString || isArray;
+    if (isObj) {
+      code.append("com.fengshihao.example.handyjson.Utils.toJson(");
+    }
+    if (isClass) {
 
-    if (isString) {
-      code.append("com.fengshihao.handyjson.Utils.quote(");
     }
     code.append(objectName).append(".").append(name);
-    if (isString) {
+    if (isObj) {
+      //code.append(", \"").append(typeName).append("\")");
       code.append(")");
     }
     code.append(';');
+    if (notLastOne) {
+      code.append("\n\tjstr += \",\" ;");
+    }
+
     endCheckNull(code);
     code.append('\n');
   }
 
   void endCheckNull(StringBuilder code) {
     if (isArray || isString || isClass) {
-      code.append("}");
+      code.append("\n}");
     }
   }
 }
