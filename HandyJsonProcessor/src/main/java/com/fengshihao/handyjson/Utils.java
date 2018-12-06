@@ -1,4 +1,4 @@
-package com.fengshihao.example.handyjson;
+package com.fengshihao.handyjson;
 
 import java.util.List;
 
@@ -90,13 +90,6 @@ public class Utils {
     }
     sb.append('"');
     return sb.toString();
-  }
-
-  public static String arrayToJson(Object obj, String type) {
-    if (obj == null) {
-      return null;
-    }
-    return null;
   }
 
   public static String toJson(boolean[] arr) {

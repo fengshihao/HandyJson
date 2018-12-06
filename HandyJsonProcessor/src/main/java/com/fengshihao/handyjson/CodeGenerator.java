@@ -14,19 +14,23 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 
+import static com.fengshihao.handyjson.CodeGenerator.SUFFIX;
+
 /**
  * Created by fengshihao on 18-10-16.
  */
 class CodeGenerator {
-  String originalName;
-  String className;
-  String packageName;
+  private String originalName;
+  private String className;
+  private String packageName;
   List<ClassField> fields = new LinkedList<>();
+
+  final static String SUFFIX = "Handy";
 
   CodeGenerator(String packageName, String className) {
     this.packageName = packageName;
     this.originalName = className;
-    this.className = className + "Handy";
+    this.className = className + SUFFIX;
   }
 
   String toJsonCode(String ob) {
@@ -110,22 +114,21 @@ class ClassField {
     boolean isObj = isString || isArray;
     boolean needEnd = false;
     if (isObj) {
-      code.append("com.fengshihao.example.handyjson.Utils.toJson(");
+      code.append("com.fengshihao.handyjson.Utils.toJson(");
       needEnd = true;
     }
     if (isClass) {
       if (typeName.startsWith("java.")) {
-        code.append("com.fengshihao.example.handyjson.Utils.toJson(")
+        code.append("com.fengshihao.handyjson.Utils.toJson(")
             .append("\"").append(typeName).append("\"").append(", ");
         needEnd = true;
       } else {
-        code.append(typeName).append("Handy.toJson(");
+        code.append(typeName).append(SUFFIX + ".toJson(");
         needEnd = true;
       }
     }
     code.append(objectName).append(".").append(name);
     if (needEnd) {
-      //code.append(", \"").append(typeName).append("\")");
       code.append(")");
     }
     code.append(';');

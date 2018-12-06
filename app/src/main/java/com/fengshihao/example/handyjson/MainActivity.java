@@ -3,6 +3,8 @@ package com.fengshihao.example.handyjson;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     String json = TestModelHandy.toJson(tm);
     Log.d("MainActivity", "onCreate: json=" + json);
+
+    JSONObject object;
   }
 }
 
