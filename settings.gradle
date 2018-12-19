@@ -1,1 +1,1 @@
-include ':app', ':HandyJsonProcessor'
+include ':app', ':HandyJsonProcessor', ':Jsoner'

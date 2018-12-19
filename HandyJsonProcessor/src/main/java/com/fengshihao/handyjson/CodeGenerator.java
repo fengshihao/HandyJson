@@ -114,12 +114,12 @@ class ClassField {
     boolean isObj = isString || isArray;
     boolean needEnd = false;
     if (isObj) {
-      code.append("com.fengshihao.handyjson.Utils.toJson(");
+      code.append("fengshihao.com.handyjson.Jsoner.toJson(");
       needEnd = true;
     }
     if (isClass) {
       if (typeName.startsWith("java.")) {
-        code.append("com.fengshihao.handyjson.Utils.toJson(")
+        code.append("fengshihao.com.handyjson.Jsoner.toJson(")
             .append("\"").append(typeName).append("\"").append(", ");
         needEnd = true;
       } else {
