@@ -38,4 +38,5 @@ dependencies {
 
     compileOnly project(path : ':HandyJsonProcessor')
     implementation project(path : ':Jsoner')
+    implementation 'com.google.code.gson:gson:2.8.5'
 }

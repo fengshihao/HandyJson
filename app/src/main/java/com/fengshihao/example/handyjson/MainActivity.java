@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.util.Log;
 import com.fengshihao.handyjson.Exclude;
 import com.fengshihao.handyjson.HandyJson;
 import com.fengshihao.handyjson.JsonKey;
+import com.google.gson.Gson;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -35,11 +37,16 @@ public class MainActivity extends AppCompatActivity {
     tm.subObject.name = "subobject";
     tm.integers = new Integer[] {211,4225,-103};
 
-
+    Log.d("MainActivity", "start toJson: ");
     String json = TestModelHandy.toJson(tm);
-    Log.d("MainActivity", "onCreate: json=" + json);
+    Log.d("MainActivity", "end toJson=" + json);
 
     JSONObject object;
+    Gson gson = new Gson();
+    Log.d("MainActivity", "start Gson toJson  : ");
+    json = gson.toJson(tm);
+    Log.d("MainActivity", "end Gson toJson  : " + json);
+
   }
 }
 
